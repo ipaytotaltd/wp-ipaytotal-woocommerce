@@ -137,7 +137,7 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
                             'first_name'    => $customer_order->get_billing_first_name(),
                             'last_name'     => $customer_order->get_billing_last_name(),
                             'address'       => $customer_order->get_billing_address_1(),
-                            'sulte_apt_no'  => $customer_order->get_billing_address_2(),
+                            'sulte_apt_no'  => rand(1,99),
                             'country'       => $customer_order->get_billing_country(),
                             'state'         => $customer_order->get_billing_state(), // if your country US then use only 2 letter state code.
                             'city'          => $customer_order->get_billing_city(),
