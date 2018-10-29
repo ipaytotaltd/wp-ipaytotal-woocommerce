@@ -202,8 +202,8 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
 			
 			wc_add_notice( __('Payment successful. ') . $response_body['message'] . ' - ' . $response_body['descripcion'] . '.', 'error' );
 
-			// Redirect to thank you page
-			//return array( 'result'   => 'success','redirect' => $this->get_return_url( $customer_order ) );
+			 Redirect to thank you page
+			 return array( 'result'   => 'success','redirect' => $this->get_return_url( $customer_order ) );
 		} 
 		
 		//else 
