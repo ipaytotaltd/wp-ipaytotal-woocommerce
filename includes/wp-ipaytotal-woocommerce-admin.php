@@ -1,8 +1,8 @@
 <?php
 /**
 * @package wp-ipaytotal-woocommerce
-* @author Web Dev
-* @since 1.0.0
+* @author  iPayTotal Ltd
+* @since   1.0.0
  */
 
 class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
