@@ -13,13 +13,13 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
 		$this->id = "wowp_iptwpg_ipaytotal";
 
 		// Show Title
-		$this->method_title = __( "IPayTotal", 'wp-ipaytotal-woocommerce' );
+		$this->method_title = __( "Credit/Debit Card", 'wp-ipaytotal-woocommerce' );
 
 		// Show Description
 		$this->method_description = __( "IPayTotal Payment Gateway Plug-in for WooCommerce", 'wp-ipaytotal-woocommerce' );
 
 		// vertical tab title
-		$this->title = __( "IPayTotal", 'wp-ipaytotal-woocommerce' );
+		$this->title = __( "Credit/Debit Card", 'wp-ipaytotal-woocommerce' );
 
 
 		$this->icon = null;
