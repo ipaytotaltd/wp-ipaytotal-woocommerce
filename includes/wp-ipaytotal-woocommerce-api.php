@@ -2,8 +2,8 @@
 
 /**
 * @package wp-ipaytotal-woocommerce
-* @author Web Dev
-* @since 1.0.0
+* @author  iPayTotal Ltd
+* @since   1.0.0
 */
 
 if ( ! defined( 'ABSPATH' ) ) {
