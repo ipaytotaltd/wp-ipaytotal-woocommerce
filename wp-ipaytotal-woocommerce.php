@@ -2,7 +2,7 @@
 /**
 * @since 1.0.0
 * @package wp-ipaytotal-woocommerce
-* @author web dev
+* @author iPayTotal Ltd
 * 
 * Plugin Name: iPayTotal - WooCommerce Payment Gateway
 * Plugin URI: https://ipaytotal.com
@@ -10,7 +10,8 @@
 * Version: 1.0.0
 * Author: iPayTotal
 * Author URI: https://ipaytotal.com
-* Licence: 
+* License: GNU General Public License v2 or later
+* License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Text Domain: wp-ipaytotal-woocommerce
 * Domain Path: /languages/
 * WC requires at least: 3.0.0 
