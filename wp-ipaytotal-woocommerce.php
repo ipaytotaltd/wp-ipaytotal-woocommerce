@@ -1,13 +1,13 @@
 <?php 
 /**
-* @since 2.0.0
+* @since 1.0.0
 * @package wp-ipaytotal-woocommerce
 * @author iPayTotal Ltd
 * 
 * Plugin Name: iPayTotal - WooCommerce Payment Gateway
 * Plugin URI: https://ipaytotal.com/contact
 * Description: WooCommerce custom payment gateway integration with iPayTotal.
-* Version: 1.0.0
+* Version: 2.0.1
 * Author: iPayTotal
 * Author URI: https://ipaytotal.com/ipaytotal-high-risk-merchant-account/
 * License: GNU General Public License v2 or later
