@@ -64,8 +64,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		return $credit_card_data;
 	}
-
-
     
 	/**
 	 * get_response_body function
@@ -86,10 +84,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		return $r;
 	}
-
 }
-
-    
-    
-    
-    

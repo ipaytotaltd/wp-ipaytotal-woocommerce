@@ -91,3 +91,69 @@ function wowp_iptwpg_ipaytotal_custom_credit_card_fields ($cc_fields , $payment_
 }
 
 add_filter( 'woocommerce_credit_card_form_fields' , 'wowp_iptwpg_ipaytotal_custom_credit_card_fields' , 10, 2 );
+
+add_filter('query_vars', 'ipaytotal_query_vars');
+add_action('init', 'ipaytotal_payment_callback_urls');
+
+function ipaytotal_query_vars($vars){
+  $vars[] = 'sulte_apt_no';
+  $vars[] = 'status';
+  $vars[] = 'reason';
+  return $vars;
+}
+
+function ipaytotal_payment_callback_urls() {
+
+  add_rewrite_rule(
+    '^ipayment-callback/(\w)?',
+    'index.php?sulte_apt_no=$matches[1]',
+    'top'
+  );
+
+}
+add_action('parse_request', 'ipayment_total_callback');
+function ipayment_total_callback( $wp ){
+	$IpaymentTotalCallback = new IpaymentTotalCallback();
+	$IpaymentTotalCallback->IpaymentCallback($wp);
+}
+
+
+class IpaymentTotalCallback extends WC_Payment_Gateway {
+    public function IpaymentCallback( $wp ) {
+    	$valid_actions = array('sulte_apt_no');
+
+		if( isset($wp->query_vars['sulte_apt_no']) && !empty($wp->query_vars['sulte_apt_no']) ) {
+			$orderId = $wp->query_vars['sulte_apt_no'];
+			$status = $wp->query_vars['status'];
+			$message = $wp->query_vars['reason'];
+			
+			if( $status == "success" ){
+				
+				global $woocommerce;
+
+				// we need it to get any order detailes
+				$order = wc_get_order( $orderId );
+
+				$order->payment_complete();
+				$order->reduce_order_stock();
+				$order->add_order_note( $message, true );
+				$woocommerce->cart->empty_cart();
+                wc_add_notice($message,'Success');
+				$order_url = $this->get_return_url( $order );
+				wp_redirect($order_url);
+				exit;
+				
+			}else{
+				global $woocommerce;
+				$order = wc_get_order( $orderId );
+				$order->add_order_note( $message, true );
+                wc_add_notice($message,'Error');
+				$order->update_status( 'failed', $message );
+				$order_url = wc_get_checkout_url();
+				wp_redirect($order_url);
+				exit;
+			}
+
+		}
+    }
+}
