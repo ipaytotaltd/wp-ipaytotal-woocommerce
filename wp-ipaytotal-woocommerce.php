@@ -7,7 +7,7 @@
 * Plugin Name: iPayTotal - WooCommerce Payment Gateway
 * Plugin URI: https://ipaytotal.com/contact
 * Description: WooCommerce custom payment gateway integration with iPayTotal.
-* Version: 2.0.1
+* Version: 1.0.0
 * Author: iPayTotal
 * Author URI: https://ipaytotal.com/ipaytotal-high-risk-merchant-account/
 * License: GNU General Public License v2 or later
@@ -18,6 +18,13 @@
 * WC tested up to: 4.9.8 
 */
  
+require 'ipaytotal/plugin-update-checker.php';
+
+$MyUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+    'http://ipaytotalwp.inanceorganix.com/plugin_update/index.php?action=get_metadata&slug=wp-ipaytotal-woocommerce-master', //Metadata URL.
+    __FILE__, //Full path to the main plugin file.
+    'wp-ipaytotal-woocommerce-master' //Plugin slug. Usually it's the same as the name of the directory.
+);
 
 /**
  * Tell WordPress to load a translation file if it exists for the user's language
