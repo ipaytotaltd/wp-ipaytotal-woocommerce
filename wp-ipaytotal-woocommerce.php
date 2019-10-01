@@ -1,13 +1,13 @@
 <?php 
 /**
-* @since 1.0.0
+* @since 1.4.0
 * @package wp-ipaytotal-woocommerce
 * @author iPayTotal Ltd
 * 
 * Plugin Name: iPayTotal - WooCommerce Payment Gateway
 * Plugin URI: https://ipaytotal.com/contact
 * Description: WooCommerce custom payment gateway integration with iPayTotal.
-* Version: 1.0.0
+* Version: 1.4.0
 * Author: iPayTotal
 * Author URI: https://ipaytotal.com/ipaytotal-high-risk-merchant-account/
 * License: GNU General Public License v2 or later
@@ -106,6 +106,7 @@ function ipaytotal_query_vars($vars){
   $vars[] = 'sulte_apt_no';
   $vars[] = 'status';
   $vars[] = 'reason';
+  $vars[] = 'message';
   return $vars;
 }
 
@@ -130,9 +131,13 @@ class IpaymentTotalCallback extends WC_Payment_Gateway {
     	$valid_actions = array('sulte_apt_no');
 
 		if( isset($wp->query_vars['sulte_apt_no']) && !empty($wp->query_vars['sulte_apt_no']) ) {
+			
 			$orderId = $wp->query_vars['sulte_apt_no'];
 			$status = $wp->query_vars['status'];
-			$message = $wp->query_vars['reason'];
+			$message = isset($wp->query_vars['reason']) ? $wp->query_vars['reason'] : '';
+			if( empty($message) ){
+				$message = isset( $wp->query_vars['message'] ) ? $wp->query_vars['message'] : "";
+			}
 			
 			if( $status == "success" ){
 				
@@ -146,6 +151,7 @@ class IpaymentTotalCallback extends WC_Payment_Gateway {
 				$order->add_order_note( $message, true );
 				$woocommerce->cart->empty_cart();
                 wc_add_notice($message,'Success');
+				wc_add_notice( __( $message, 'woocommerce' ), 'success' );
 				$order_url = $this->get_return_url( $order );
 				wp_redirect($order_url);
 				exit;
@@ -154,10 +160,10 @@ class IpaymentTotalCallback extends WC_Payment_Gateway {
 				global $woocommerce;
 				$order = wc_get_order( $orderId );
 				$order->add_order_note( $message, true );
+                $order->update_status( 'failed', $message );
                 wc_add_notice($message,'Error');
-				$order->update_status( 'failed', $message );
-				$order_url = wc_get_checkout_url();
-				wp_redirect($order_url);
+				wc_add_notice( __( $message, 'woocommerce' ), 'error' );
+				wp_safe_redirect( wc_get_checkout_url() );
 				exit;
 			}
 

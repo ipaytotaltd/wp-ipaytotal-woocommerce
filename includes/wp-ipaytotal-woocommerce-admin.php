@@ -71,11 +71,6 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
 				'type'			=> 'text',
 				'desc_tip'	=> __( 'This is the API Secret Key provided by iPayTotal when you signed up for an account.', 'wp-ipaytotal-woocommerce' ),
 			),
-			'ipt_response_url' => array(
-				'title'			=> __( 'Response URL', 'wp-ipaytotal-woocommerce' ),
-				'type'			=> 'text',
-				'desc_tip'	=> __( 'URL where we redirect after successfully redirect from 3DS complete.', 'wp-ipaytotal-woocommerce' ),
-			),
 			'ipt_test_mode' => array(
 				'title'			=> __( 'Enable / Disable', 'wp-ipaytotal-woocommerce' ),
 				'label'			=> __( 'Enable this checkmark to go Test Mode', 'wp-ipaytotal-woocommerce' ),
@@ -146,16 +141,15 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
         $date_array = $_POST['wowp_iptwpg_ipaytotal-card-expiry'];
 
 		$date_array = explode("/", str_replace(' ', '', $date_array));
-
-		if( empty($this->ipt_response_url) ){
-			$this->ipt_response_url = site_url('ipayment-callback');
-		}
+		
+		$ipt_response_url = site_url('ipayment-callback');
+	
 		$billing_state = $customer_order->get_billing_state();
 		$billing_city = $customer_order->get_billing_city();
 		$zip = $customer_order->get_billing_postcode();
         $data = array(
             'api_key'       => $this->ipt_key_secret,
-            'response_url'  => $this->ipt_response_url,
+            'response_url'  => $ipt_response_url,
             'first_name'    => $customer_order->get_billing_first_name(),
             'last_name'     => $customer_order->get_billing_last_name(),
             'address'       => $customer_order->get_billing_address_1(),
@@ -210,10 +204,10 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
 				throw new Exception( __( 'iPayTotal\'s Response was not get any data.', 'wp-ipaytotal-woocommerce' ) );	
 			}
 		}
-
+		
 		// get body response while get not error
 		$response_body = $ipaytotal_card->get_response_body($result);
-
+		
 		// 100 o 200 means the transaction was a success
 		if ( $response_body['status'] == '3d_redirect' ) {
 
@@ -242,6 +236,20 @@ class wowp_iptwpg_ipaytotal extends WC_Payment_Gateway_CC {
 
 			 //Redirect to thank you page
 			 return array( 'result'   => 'success','redirect' => $this->get_return_url( $customer_order ) );
+		} elseif( $response_body['status'] == 'fail' ){
+			if( isset($response_body['errors']) && !empty($response_body['errors']) ){
+				$errors = $response_body['errors'];
+				$errorsMessage = "";
+				foreach( $errors as $keye => $valuee ){
+					$errorsMessage .= "<br>".$valuee[0];	
+				}
+
+				wc_add_notice( __('Payment failed. ') . $errorsMessage, 'error' );
+				$customer_order->update_status('failed');
+			}else{
+				wc_add_notice( __('Payment failed. ') . $response_body['message'], 'error' );
+				$customer_order->update_status('failed');
+			}
 		} else {
 			wc_add_notice( __('Payment failed. ') . $response_body['message'], 'error' );
 			$customer_order->update_status('failed');
